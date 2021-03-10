@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div>
+        <input id="inputMeal" type="text" placeholder="search a meal">
+    <button id="button">Search</button>
+    </div>
+
+    <div>
+         <div >
+      
+            <p id="mealDetails"></p>
+        </div>
+        
+
+        <div id="item"></div>
+        <div id="ingredients"></div>
+        
+        
+
+    </div>
+    <script>
+       
+      //fetching data from API
+       const getMeal = meal=>{
+           fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${meal}`)
+           .then( response => response.json())
+           .then( data => updateUI(data)).catch(function(error) {
+             console.log(error);
+    });
+       }
+
+
+       //creating function to get the meal data and image 
+
+       const updateUI = data => {
+            const mealss= data.meals;
+            console.log(mealss);
+            mealss.forEach(element => {
+            element= mealss[0].strMeal;
+            console.log(element)
+            const item= document.getElementById('item');
+            item.innerHTML = `
+            <div>
+                <h1>${element}</h1>    
+                <img id="image" src="${mealss[0].strMealThumb}" alt="">
+            </div>
+    
+            `
+        //Working on food image div and adding an event listener to show the ingredient while its clicked.
+
+            item.addEventListener('click', function(){
+                const ingredient= document.getElementById('ingredients');
+                console.log(mealss[0].strIngredient1)
+                ingredient.innerHTML=`
+            <div>
+                <h1>Ingredients</h1>
+                <ul>
+                        <li>${mealss[0].strIngredient1}</li>
+                        <li>${mealss[0].strIngredient2}</li>
+                        <li>${mealss[0].strIngredient3}</li>
+                        <li>${mealss[0].strIngredient4}</li>
+                        <li>${mealss[0].strIngredient5}</li>
+                        <li>${mealss[0].strIngredient6}</li>
+                        <li>${mealss[0].strIngredient7}</li>
+                        <li>${mealss[0].strIngredient8}</li>
+                </ul>   
+               
+            </div>
+    
+            `
+            
+            })
+
+
+
+        });
+       }
+
+       //Working on search button.
+           
+       const searchButton=document.getElementById('button');
+       searchButton.addEventListener('click', function(){
+            const input = document.getElementById('inputMeal').value;
+            getMeal(input);
+            document.getElementById('ingredients').style.display= "block";
+            document.getElementById('item').style.display= "block";
+            document.getElementById('ingredients').innerText='';
+       })
+
+       
+     
+    </script>
+</body>
+</html>
